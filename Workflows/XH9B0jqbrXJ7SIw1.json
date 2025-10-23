@@ -1,0 +1,118 @@
+{
+  "createdAt": "2025-10-14T15:22:25.759Z",
+  "updatedAt": "2025-10-14T15:30:05.000Z",
+  "id": "XH9B0jqbrXJ7SIw1",
+  "name": "4-4. Groq文字轉語音",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        -16
+      ],
+      "id": "5b899276-3eef-44a0-beb6-6b88e615ddd0",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8c3c2359-6e46-44b3-8d9e-de6f1de3e805",
+              "name": "model",
+              "value": "playai-tts",
+              "type": "string"
+            },
+            {
+              "id": "5395155b-f058-491c-bfc0-043842301b30",
+              "name": "text",
+              "value": "Hey everyone, welcome back to the channel! I’m Kevin, and today we’re diving into one of my favorite automation tools — n8n. If you’ve ever wished you could connect your favorite apps, automate boring tasks, and build powerful workflows without writing a single line of code, then you’re in the right place. We’ll break down what n8n is, how it works, and I’ll even show you a few cool examples of automations you can set up in minutes. So grab your coffee, sit back, and let’s get started. And if you find this video helpful, don’t forget to hit the like button, subscribe, and turn on the notification bell — it really helps the channel grow and keeps you updated on my latest tech tutorials. Let’s jump in!",
+              "type": "string"
+            },
+            {
+              "id": "54098a84-8b14-4c2a-9d43-d26d063842d7",
+              "name": "voice",
+              "value": "Fritz-PlayAI",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -144,
+        -16
+      ],
+      "id": "91b3e9e5-f25b-4449-852c-be0ff1e7f554",
+      "name": "Create Text"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/audio/speech",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "groqApi",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n  \"Content-Type\": \"application/json\"\n}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"{{ $json.model }}\",\n  \"input\": \"{{ $json.text }}\",\n  \"voice\": \"{{ $json.voice }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        80,
+        -16
+      ],
+      "id": "f72681a4-b16f-43af-b989-da291006af3f",
+      "name": "Text To Speech",
+      "credentials": {
+        "groqApi": {
+          "id": "mKrhkv0uraeiU1t7",
+          "name": "Groq account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Create Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Text": {
+      "main": [
+        [
+          {
+            "node": "Text To Speech",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "058d4708-296f-4918-9a7f-19ecf73fb615",
+  "triggerCount": 0,
+  "tags": []
+}

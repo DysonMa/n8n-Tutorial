@@ -1,0 +1,128 @@
+{
+  "createdAt": "2025-09-30T13:06:03.225Z",
+  "updatedAt": "2025-09-30T13:21:07.000Z",
+  "id": "zEIjkGcu2HvSRMjj",
+  "name": "2-6. 台股資料上傳Google Drive",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        0
+      ],
+      "id": "2ce78fb5-5463-4337-8806-1052ebff17dc",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://openapi.twse.com.tw/v1/ exchangeReport/STOCK_DAY_ALL",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -48,
+        0
+      ],
+      "id": "eeae1f59-4b7c-468e-b193-b9e2fef1319b",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        160,
+        0
+      ],
+      "id": "b6f97201-2685-446f-84e9-747e614013f3",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "name": "stock.csv",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1RlT84bT-84tDEMogNEKUk9Fjcw9VzVNT",
+          "mode": "list",
+          "cachedResultName": "tw_stock",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1RlT84bT-84tDEMogNEKUk9Fjcw9VzVNT"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        368,
+        0
+      ],
+      "id": "5a3ecdec-e530-4074-a69d-818f209ede6e",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "kEVK73BJp9vUFmDG",
+          "name": "Google Drive account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "385b8fb9-40ab-4fbe-87c0-2dcaad954664",
+  "triggerCount": 0,
+  "tags": []
+}

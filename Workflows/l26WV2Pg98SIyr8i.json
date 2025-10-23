@@ -1,0 +1,397 @@
+{
+  "createdAt": "2025-10-03T15:19:57.045Z",
+  "updatedAt": "2025-10-03T15:45:00.000Z",
+  "id": "l26WV2Pg98SIyr8i",
+  "name": "2-9. 單日漲幅前十多股票前月表現",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -496,
+        96
+      ],
+      "id": "678b7ffe-3ee5-4d40-a8be-4aad5bf79e73",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ee7b050e-16da-4a16-803b-f7c50d75f68d",
+              "name": "日期",
+              "value": "={{ $json.Date }}",
+              "type": "string"
+            },
+            {
+              "id": "700812c5-b143-4572-9e90-8bd0a060c2d5",
+              "name": "代號",
+              "value": "={{ $json.Code }}",
+              "type": "string"
+            },
+            {
+              "id": "1bba6720-0dee-46f2-a0cd-49af7a1ebc87",
+              "name": "名稱",
+              "value": "={{ $json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "c0953f1f-112f-4221-b9ed-c7c3cbd3ca10",
+              "name": "交易量",
+              "value": "={{ $json.TradeVolume }}",
+              "type": "number"
+            },
+            {
+              "id": "e3a09eac-3e1d-4203-be4d-1c066a1cbd78",
+              "name": "收盤價",
+              "value": "={{ $json.ClosingPrice }}",
+              "type": "number"
+            },
+            {
+              "id": "1cbc3e69-3e64-452d-bce7-e0173083b965",
+              "name": "漲幅",
+              "value": "={{ \n\n$json.Change.length > 0 && $json.ClosingPrice.length > 0 \n\n? \n\n(Number($json.Change)/Number($json.ClosingPrice)).round(3)\n\n: \n\n0 \n\n}}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -48,
+        0
+      ],
+      "id": "012b58cd-61c9-4907-ae4b-2aef799382a4",
+      "name": "Data Transform"
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "漲幅",
+              "order": "descending"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        176,
+        0
+      ],
+      "id": "d8a76954-69c8-4384-b20c-085faab290ce",
+      "name": "Sort"
+    },
+    {
+      "parameters": {
+        "maxItems": 10
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        400,
+        0
+      ],
+      "id": "638f8c73-b55e-49c4-843e-a9a303804a24",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "url": "https://openapi.twse.com.tw/v1/ exchangeReport/STOCK_DAY_ALL",
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -272,
+        0
+      ],
+      "id": "284f51f7-f528-4135-b1c7-efe86e8c3c22",
+      "name": "Get One Day Stock"
+    },
+    {
+      "parameters": {
+        "url": "https://openapi.twse.com.tw/v1/exchangeReport/FMSRFK_ALL",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        176,
+        192
+      ],
+      "id": "2f75245b-a390-48b6-8f4d-2abaf3704436",
+      "name": "Get Last Month Stock"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"代號\": \"{{ $json.Code }}\",\n  \"名稱\": \"{{ $json.Name }}\",\n  \"前月最高價\": {{ $json.HighestPrice }},\n  \"前月最低價\": {{ $json.LowestPrice }}\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        192
+      ],
+      "id": "0a6d5d92-823a-4a70-827d-00fc3681a4ed",
+      "name": "Month Data Transform"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "[\"代號\"]",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        624,
+        96
+      ],
+      "id": "4f12e9dc-207a-495f-8a19-1b3fd7651df2",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "18yhtBkFLt-212n371AIZ6fTPvQRw4Y18iTPhISd2_T8",
+          "mode": "list",
+          "cachedResultName": "單日漲幅最多股票",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18yhtBkFLt-212n371AIZ6fTPvQRw4Y18iTPhISd2_T8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "工作表1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18yhtBkFLt-212n371AIZ6fTPvQRw4Y18iTPhISd2_T8/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "代號"
+          ],
+          "schema": [
+            {
+              "id": "代號",
+              "displayName": "代號",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "名稱",
+              "displayName": "名稱",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "交易量",
+              "displayName": "交易量",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "收盤價",
+              "displayName": "收盤價",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "漲幅",
+              "displayName": "漲幅",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "日期",
+              "displayName": "日期",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "前月最高價",
+              "displayName": "前月最高價",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "前月最低價",
+              "displayName": "前月最低價",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        832,
+        96
+      ],
+      "id": "3cb79f37-ccd6-4776-873f-341b7e02f4f5",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Zw7FjHfjGe1b7PRh",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Data Transform": {
+      "main": [
+        [
+          {
+            "node": "Sort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sort": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get Last Month Stock",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get One Day Stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get One Day Stock": {
+      "main": [
+        [
+          {
+            "node": "Data Transform",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Last Month Stock": {
+      "main": [
+        [
+          {
+            "node": "Month Data Transform",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Month Data Transform": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "3d04cfcf-5bc7-417b-9ef1-659959d40a7f",
+  "triggerCount": 0,
+  "tags": []
+}

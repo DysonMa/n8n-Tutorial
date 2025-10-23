@@ -1,0 +1,103 @@
+{
+  "createdAt": "2025-10-18T07:05:06.277Z",
+  "updatedAt": "2025-10-18T08:51:17.000Z",
+  "id": "qAQV7olLC9qFwMUG",
+  "name": "4-6.打造LINE聊天機器人",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "3236ea15-1f78-4536-821c-0c14067c4841",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -320,
+        -16
+      ],
+      "id": "cb8498a9-4c28-43c3-bcd1-8343bbaf9a0e",
+      "name": "Webhook",
+      "webhookId": "3236ea15-1f78-4536-821c-0c14067c4841"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n\"event_msg\": \"{{ $json.body.events[0].message.text }}\",\n\"event_type\": \"{{ $json.body.events[0].message.type }}\",\n\"user_id\": \"{{ $json.body.events[0].source.userId }}\",\n\"reply_token\": \"{{ $json.body.events[0].replyToken }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -96,
+        -16
+      ],
+      "id": "cf11df7f-b216-4e0d-b692-d7a738a6fa13",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.line.me/v2/bot/message/reply",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpBearerAuth",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n  \"Content-Type\": \"application/json\"\n}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"replyToken\":\"{{ $json.reply_token }}\",\n  \"messages\":[\n    {\n      \"type\":\"text\",\n      \"text\":\"你說：{{ $json.event_msg }}\"\n    },\n    {\n      \"type\":\"text\",\n      \"text\":\"收到！\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        128,
+        -16
+      ],
+      "id": "7485d406-2070-468d-9c93-cfa5390667fd",
+      "name": "Reply",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "kOd0Rsiq9Mtb81bq",
+          "name": "LINE Auth Token"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "13ed08b8-f5c2-4a3e-a42e-8f7ad966c076",
+  "triggerCount": 0,
+  "tags": []
+}

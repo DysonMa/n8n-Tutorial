@@ -1,0 +1,138 @@
+{
+  "createdAt": "2025-10-04T07:41:05.525Z",
+  "updatedAt": "2025-10-04T07:57:07.000Z",
+  "id": "iEMaIxKGUAD7gIJW",
+  "name": "2-11.錯誤例外處理",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -496,
+        224
+      ],
+      "id": "04ae23fa-ce83-48a1-b228-669cc90f3a47",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "fileSelector": "hello.png",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -496,
+        0
+      ],
+      "id": "e611781c-a256-43fd-83ed-cdec0bae41f2",
+      "name": "Read/Write Files from Disk",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return {}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -272,
+        0
+      ],
+      "id": "f0e67f63-68cc-44ae-b10e-2e7be65b5559",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "url": "=https://jsonplaceholder.typicode.com/todos/{{ $json.id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -496,
+        448
+      ],
+      "id": "d1fb5f68-030c-458c-b716-22d3c6f2cb5d",
+      "name": "HTTP Request",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "throw new Error(\"This is an error\");"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -272,
+        224
+      ],
+      "id": "d3fc23fe-0444-430f-8d1a-82749b96a1a7",
+      "name": "Code1",
+      "retryOnFail": false,
+      "waitBetweenTries": 5000,
+      "maxTries": 5,
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n  \"status\": \"successful\"\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -48,
+        224
+      ],
+      "id": "11418d2e-6cb2-4107-a07a-f6237297a007",
+      "name": "Code2"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "3873f640-d25e-4a8a-869f-a94acf156bdf",
+  "triggerCount": 0,
+  "tags": []
+}

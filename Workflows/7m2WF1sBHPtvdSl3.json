@@ -1,0 +1,131 @@
+{
+  "createdAt": "2025-09-21T07:26:17.482Z",
+  "updatedAt": "2025-09-21T07:27:52.000Z",
+  "id": "7m2WF1sBHPtvdSl3",
+  "name": "2-3. Code Node",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -16
+      ],
+      "id": "c527c254-b660-456a-97dd-e672531a2c5f",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "jsCode": "console.log($input.all())\nconsole.log($input.first().json.name)\nconsole.log($input.last().json.name)\nreturn $input.all()"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        -112
+      ],
+      "id": "fb6763f3-3d49-45f6-a002-907d549c4179",
+      "name": "Run All Items Demo"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "console.log($input.item.json.name)\nconsole.log($json.name)\nreturn $json"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        80
+      ],
+      "id": "31fd5714-2569-4dca-a0fa-fcae15eab36c",
+      "name": "Run Each Items Demo"
+    },
+    {
+      "parameters": {
+        "jsCode": "console.log($('When clicking ‘Execute workflow’').first().json.name)\nreturn {}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        -112
+      ],
+      "id": "3e6a0401-0c1c-47fa-8daa-7a49aeb3427c",
+      "name": "Get Prev Node Data"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Run All Items Demo",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Run Each Items Demo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run All Items Demo": {
+      "main": [
+        [
+          {
+            "node": "Get Prev Node Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "When clicking ‘Execute workflow’": [
+      {
+        "json": {
+          "id": 1,
+          "name": "John",
+          "age": 15,
+          "class": "A",
+          "score": 80
+        }
+      },
+      {
+        "json": {
+          "id": 2,
+          "name": "Merry",
+          "age": 14,
+          "class": "B",
+          "score": 90
+        }
+      },
+      {
+        "json": {
+          "id": 3,
+          "name": "Eric",
+          "age": 14,
+          "class": "B",
+          "score": 50
+        }
+      }
+    ]
+  },
+  "versionId": "dcae9c34-e413-4ff9-a932-09f6998b80df",
+  "triggerCount": 0,
+  "tags": []
+}

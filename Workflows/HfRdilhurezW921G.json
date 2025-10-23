@@ -1,0 +1,179 @@
+{
+  "createdAt": "2025-09-21T07:26:00.728Z",
+  "updatedAt": "2025-09-21T07:27:53.000Z",
+  "id": "HfRdilhurezW921G",
+  "name": "2-2. 邏輯控制 (if, switch)",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -48
+      ],
+      "id": "04a4d8ef-6125-40a0-b38c-ddbb1d33bc3a",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.score }}",
+                    "rightValue": 60,
+                    "operator": {
+                      "type": "number",
+                      "operation": "gt"
+                    },
+                    "id": "3a101ef1-6021-47d9-a93f-c1fa2edd8923"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Passing"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "809e72d4-04a6-4223-8b28-f53df48f3160",
+                    "leftValue": "={{ $json.class }}",
+                    "rightValue": "B",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "B Class"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        224,
+        48
+      ],
+      "id": "1b5f8a98-5b4c-484b-8829-9cf799c51fd3",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7c25b349-f8c3-4ef8-b91c-a508411569b0",
+              "leftValue": "={{ $json.score }}",
+              "rightValue": 60,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        224,
+        -144
+      ],
+      "id": "6b8cefdd-a40c-4565-a7e2-5af51bc2a740",
+      "name": "If"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "When clicking ‘Execute workflow’": [
+      {
+        "json": {
+          "id": 1,
+          "name": "John",
+          "age": 15,
+          "class": "A",
+          "score": 80
+        }
+      },
+      {
+        "json": {
+          "id": 2,
+          "name": "Merry",
+          "age": 14,
+          "class": "B",
+          "score": 90
+        }
+      },
+      {
+        "json": {
+          "id": 3,
+          "name": "Eric",
+          "age": 14,
+          "class": "B",
+          "score": 50
+        }
+      }
+    ]
+  },
+  "versionId": "a6755f38-8fb6-4e53-8c29-dd9de7872f18",
+  "triggerCount": 0,
+  "tags": []
+}

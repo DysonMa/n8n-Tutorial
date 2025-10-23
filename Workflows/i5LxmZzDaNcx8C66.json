@@ -1,0 +1,578 @@
+{
+  "createdAt": "2025-10-01T14:57:19.663Z",
+  "updatedAt": "2025-10-01T15:37:02.000Z",
+  "id": "i5LxmZzDaNcx8C66",
+  "name": "2-8. 完整台股資料串接",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -16
+      ],
+      "id": "57446c1c-2a5a-47c4-ae72-9243670a407b",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $json.sheet_name }}",
+        "limit": 1,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1RlT84bT-84tDEMogNEKUk9Fjcw9VzVNT",
+            "mode": "list",
+            "cachedResultName": "tw_stock",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1RlT84bT-84tDEMogNEKUk9Fjcw9VzVNT"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -112,
+        -16
+      ],
+      "id": "d5977a7a-34c1-44e4-9124-c1bfd0c667ec",
+      "name": "Search files and folders",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "kEVK73BJp9vUFmDG",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4b4560f4-9386-4010-b8ea-683dc41d1a89",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        96,
+        -16
+      ],
+      "id": "9a5754be-b3a3-49ab-bb97-de0ae589225f",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "81138417-2e30-49f6-8172-33bfe9462584",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        816,
+        -16
+      ],
+      "id": "cf16c461-5559-4f33-ad54-15d99999a7cf",
+      "name": "Get SpreadSheet ID"
+    },
+    {
+      "parameters": {
+        "resource": "spreadsheet",
+        "title": "={{ $('When clicking ‘Execute workflow’').item.json.sheet_name }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        304,
+        80
+      ],
+      "id": "768919d3-04a8-4398-8cd0-1e5ec3189e37",
+      "name": "Create spreadsheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Zw7FjHfjGe1b7PRh",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.spreadsheetId }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1RlT84bT-84tDEMogNEKUk9Fjcw9VzVNT",
+          "mode": "list",
+          "cachedResultName": "tw_stock",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1RlT84bT-84tDEMogNEKUk9Fjcw9VzVNT"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        512,
+        80
+      ],
+      "id": "99d411eb-b178-4068-8553-2914cad07cc0",
+      "name": "Move file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "kEVK73BJp9vUFmDG",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "title": "={{ $now.format('yyyy-MM-dd') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1024,
+        -16
+      ],
+      "id": "5d7b1802-ceb2-476a-87d0-af52f8f33ad6",
+      "name": "Create sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Zw7FjHfjGe1b7PRh",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Note\nCreate or Get Google Sheet",
+        "height": 432,
+        "width": 1360
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -144,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "61ec9f1b-557d-4a17-8bc6-dd4d7b54c3f8",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "url": "https://openapi.twse.com.tw/v1/ exchangeReport/STOCK_DAY_ALL",
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1232,
+        -16
+      ],
+      "id": "6e0da58a-81aa-4b43-875b-229cf30741f6",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ee7b050e-16da-4a16-803b-f7c50d75f68d",
+              "name": "日期",
+              "value": "={{ $json.Date }}",
+              "type": "string"
+            },
+            {
+              "id": "700812c5-b143-4572-9e90-8bd0a060c2d5",
+              "name": "代號",
+              "value": "={{ $json.Code }}",
+              "type": "string"
+            },
+            {
+              "id": "1bba6720-0dee-46f2-a0cd-49af7a1ebc87",
+              "name": "名稱",
+              "value": "={{ $json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "c0953f1f-112f-4221-b9ed-c7c3cbd3ca10",
+              "name": "交易量",
+              "value": "={{ $json.TradeVolume }}",
+              "type": "number"
+            },
+            {
+              "id": "e3a09eac-3e1d-4203-be4d-1c066a1cbd78",
+              "name": "收盤價",
+              "value": "={{ $json.ClosingPrice }}",
+              "type": "number"
+            },
+            {
+              "id": "1cbc3e69-3e64-452d-bce7-e0173083b965",
+              "name": "漲幅",
+              "value": "={{ \n\n$json.Change.length > 0 && $json.ClosingPrice.length > 0 \n\n? \n\n(Number($json.Change)/Number($json.ClosingPrice)).round(3)\n\n: \n\n0 \n\n}}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1440,
+        -16
+      ],
+      "id": "e2fdc307-b70a-45e2-a809-7ad9e6d0d7ee",
+      "name": "Data Transform"
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "漲幅",
+              "order": "descending"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        1648,
+        -16
+      ],
+      "id": "7d9e8890-aa89-4e49-a60a-28c9bcd98012",
+      "name": "Sort"
+    },
+    {
+      "parameters": {
+        "maxItems": 10
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        1856,
+        -16
+      ],
+      "id": "77dfa269-df90-4c06-88ad-74cac4f9dc97",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Get SpreadSheet ID').item.json.id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('Create sheet').item.json.sheetId }}",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "代號"
+          ],
+          "schema": [
+            {
+              "id": "日期",
+              "displayName": "日期",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "代號",
+              "displayName": "代號",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "名稱",
+              "displayName": "名稱",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "交易量",
+              "displayName": "交易量",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "收盤價",
+              "displayName": "收盤價",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "漲幅",
+              "displayName": "漲幅",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "FALSE",
+              "displayName": "FALSE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2064,
+        -16
+      ],
+      "id": "ebe0bab4-4933-4940-8a87-9eb5b21a2495",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Zw7FjHfjGe1b7PRh",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Get SpreadSheet ID",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create spreadsheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create spreadsheet": {
+      "main": [
+        [
+          {
+            "node": "Move file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move file": {
+      "main": [
+        [
+          {
+            "node": "Get SpreadSheet ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get SpreadSheet ID": {
+      "main": [
+        [
+          {
+            "node": "Create sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create sheet": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Data Transform",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Transform": {
+      "main": [
+        [
+          {
+            "node": "Sort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sort": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "When clicking ‘Execute workflow’": [
+      {
+        "json": {
+          "sheet_name": "每日漲幅前十大股票"
+        }
+      }
+    ]
+  },
+  "versionId": "5ce9b803-bf3a-4edb-86f3-ec493ee10da2",
+  "triggerCount": 0,
+  "tags": []
+}

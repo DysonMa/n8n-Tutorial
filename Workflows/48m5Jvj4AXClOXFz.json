@@ -1,0 +1,254 @@
+{
+  "createdAt": "2025-10-13T15:01:11.187Z",
+  "updatedAt": "2025-10-13T15:22:24.000Z",
+  "id": "48m5Jvj4AXClOXFz",
+  "name": "4-1. RSS商周文章訂閱寫入Notion",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "feedUrl": "https://cmsapi.businessweekly.com.tw/?CategoryId=24612ec9-2ac5-4e1f-ab04-310879f89b33&TemplateId=8E19CF43-50E5-4093-B72D-70A912962D55"
+      },
+      "type": "n8n-nodes-base.rssFeedReadTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b45b97ba-9805-4d40-a5b6-3bc4685146e0",
+      "name": "RSS Feed Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2e32f0f8-a159-46db-8d7c-67796f2a1181",
+              "name": "creator",
+              "value": "={{ $json.creator }}",
+              "type": "string"
+            },
+            {
+              "id": "dddad132-48d7-4c22-8cc1-3cda2e1732c7",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "f506daa6-d601-428b-9af8-98626f1c0984",
+              "name": "link",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "1e5e395c-f3c0-458e-a891-538243a1a01c",
+              "name": "pubDate",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "f0e904b2-143f-4344-b7b1-43fd55eff29b",
+      "name": "Get Info"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.link }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "e6d573a7-456b-4805-81e3-391e885aa7e3",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "title",
+              "cssSelector": ".Single-title-main"
+            },
+            {
+              "key": "content",
+              "cssSelector": ".Single-article.WebContent"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        624,
+        0
+      ],
+      "id": "49228036-3eee-47a5-b500-9dee7b76c465",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "value": "28baf6f6-c5b8-80f5-8a71-c429aea3c1b5",
+          "mode": "list",
+          "cachedResultName": "商周最新文章",
+          "cachedResultUrl": "https://www.notion.so/28baf6f6c5b880f58a71c429aea3c1b5"
+        },
+        "title": "={{ $json.title }}",
+        "blockUi": {
+          "blockValues": [
+            {
+              "textContent": "={{ $json.content.slice(0, 2000) }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        832,
+        0
+      ],
+      "id": "53be7da0-596d-4e43-bc4d-f48588e07cf6",
+      "name": "Create a database page",
+      "credentials": {
+        "notionApi": {
+          "id": "B18KOKd2FxCoKi1w",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        64,
+        256
+      ],
+      "id": "9403cb11-b919-46a4-acb4-9b4103ed0dfd",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "block",
+        "operation": "getAll",
+        "blockId": {
+          "__rl": true,
+          "value": "28baf6f6c5b88178b1d3febc0815dad0",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        272,
+        256
+      ],
+      "id": "ca5442c8-5c63-45c6-8130-b473eb69a13e",
+      "name": "Get many child blocks",
+      "credentials": {
+        "notionApi": {
+          "id": "B18KOKd2FxCoKi1w",
+          "name": "Notion account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "RSS Feed Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Info": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Create a database page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get many child blocks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:RSS Feed Trigger": {
+      "lastItemDate": "2025-10-03T17:01:08.000Z"
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "052d01d8-c1e2-4425-aa0c-b11cb535a1b7",
+  "triggerCount": 1,
+  "tags": []
+}

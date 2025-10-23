@@ -1,0 +1,126 @@
+{
+  "createdAt": "2025-10-18T08:32:03.501Z",
+  "updatedAt": "2025-10-18T08:37:54.000Z",
+  "id": "DA1RAWzvv8WCsoaR",
+  "name": "4-8.當日匯率查詢",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "url": "=https://rate.bot.com.tw/xrt/quote/{{ $json.year }}-{{ $json.month }}/{{ $json.currency }}?Lang=zh-TW",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -160,
+        0
+      ],
+      "id": "9b957720-a97a-4220-bfdd-10d711c4885a",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "掛牌日期",
+              "cssSelector": "tr > td:nth-child(1) a",
+              "returnArray": true
+            },
+            {
+              "key": "幣別",
+              "cssSelector": "tr > td:nth-child(2)",
+              "returnArray": true
+            },
+            {
+              "key": "本行買入現金匯率",
+              "cssSelector": "tr > td:nth-child(3)",
+              "returnArray": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        64,
+        0
+      ],
+      "id": "081537c3-6d51-483e-a04f-2b5141877cc7",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "year"
+            },
+            {
+              "name": "month"
+            },
+            {
+              "name": "currency"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -384,
+        0
+      ],
+      "id": "2da497f2-d2ae-4e96-8046-8eab7fb20dd7",
+      "name": "When Executed by Another Workflow"
+    }
+  ],
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        []
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "2fsP25FHVR9CpLZz"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": null,
+  "pinData": {},
+  "versionId": "9f035bcb-0eb0-4b08-81b2-87e1c2c33a5d",
+  "triggerCount": 1,
+  "tags": []
+}

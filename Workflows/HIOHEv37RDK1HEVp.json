@@ -1,0 +1,253 @@
+{
+  "createdAt": "2025-10-14T15:08:32.718Z",
+  "updatedAt": "2025-10-14T15:14:49.000Z",
+  "id": "HIOHEv37RDK1HEVp",
+  "name": "4-3. Groq總結Notion文章",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        0
+      ],
+      "id": "b9b13d84-bc02-4f0f-a45f-e047207f2085",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "28baf6f6-c5b8-80f5-8a71-c429aea3c1b5",
+          "mode": "list",
+          "cachedResultName": "商周最新文章",
+          "cachedResultUrl": "https://www.notion.so/28baf6f6c5b880f58a71c429aea3c1b5"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        -144,
+        0
+      ],
+      "id": "9fee0acb-ba8d-4898-a584-b573a47985bb",
+      "name": "Get many database pages",
+      "credentials": {
+        "notionApi": {
+          "id": "B18KOKd2FxCoKi1w",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "block",
+        "operation": "getAll",
+        "blockId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        64,
+        0
+      ],
+      "id": "f2ac9c06-ecc1-4c48-995a-3f9ce0aa0021",
+      "name": "Get many child blocks",
+      "credentials": {
+        "notionApi": {
+          "id": "B18KOKd2FxCoKi1w",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f8abb8de-58b1-44f5-b1bd-b89bf479f5e3",
+              "name": "content",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        272,
+        0
+      ],
+      "id": "9bf4f7e3-ee0e-43b9-952c-ee037190ce56",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('When clicking ‘Execute workflow’').first().json.prompt }}\nContent:\n{{ $json.content }}",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        480,
+        0
+      ],
+      "id": "5935fb05-9878-4e97-8c23-8504821e461d",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $('Get many database pages').item.json.id }}",
+          "mode": "id"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Summary By Groq|rich_text",
+              "textContent": "={{ $json.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        832,
+        0
+      ],
+      "id": "459ea36c-1c7c-4fa9-bd6a-4b9fe4160da6",
+      "name": "Update a database page",
+      "credentials": {
+        "notionApi": {
+          "id": "B18KOKd2FxCoKi1w",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        416,
+        208
+      ],
+      "id": "d2fd68be-471f-4b7f-8f29-48903d96cb1e",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "mKrhkv0uraeiU1t7",
+          "name": "Groq account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get many database pages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many database pages": {
+      "main": [
+        [
+          {
+            "node": "Get many child blocks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many child blocks": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Update a database page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "When clicking ‘Execute workflow’": [
+      {
+        "json": {
+          "prompt": "Please summarize the content below in Chinese!"
+        }
+      }
+    ]
+  },
+  "versionId": "28e5f0d6-99f5-442f-a53f-0d2759bd7355",
+  "triggerCount": 0,
+  "tags": []
+}

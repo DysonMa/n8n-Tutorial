@@ -1,0 +1,275 @@
+{
+  "createdAt": "2025-09-30T13:24:21.354Z",
+  "updatedAt": "2025-09-30T16:00:32.000Z",
+  "id": "jWoBETY8INg5umvm",
+  "name": "2-7. 單日漲幅前十多股票",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -336,
+        0
+      ],
+      "id": "a3780cce-b8b9-4acc-b472-685689337b5e",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7eca1129-9c12-4f59-8f4f-b38b2c418ef5",
+              "name": "代號",
+              "value": "={{ $json.Code }}",
+              "type": "string"
+            },
+            {
+              "id": "c1e937db-75f0-44f6-9c50-f17f45de1c06",
+              "name": "名稱",
+              "value": "={{ $json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "34068744-9428-4428-8e4f-d2970aab8dbc",
+              "name": "交易量",
+              "value": "={{ $json.TradeVolume }}",
+              "type": "number"
+            },
+            {
+              "id": "709489f6-dbe6-489d-a1a1-4b8823dfd270",
+              "name": "收盤價",
+              "value": "={{ $json.ClosingPrice }}",
+              "type": "number"
+            },
+            {
+              "id": "2ef394dd-adeb-4ab6-b68d-5c548ba3e83d",
+              "name": "漲幅",
+              "value": "={{ \n\n$json.Change.length > 0 && $json.ClosingPrice.length > 0 \n\n? \n\n(Number($json.Change)/Number($json.ClosingPrice)).round(3)\n\n: \n\n0 \n\n}}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        80,
+        0
+      ],
+      "id": "d77191e1-7533-441c-97da-95fce4f41614",
+      "name": "Data Transform"
+    },
+    {
+      "parameters": {
+        "url": "https://openapi.twse.com.tw/v1/ exchangeReport/STOCK_DAY_ALL",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -128,
+        0
+      ],
+      "id": "c0be5661-c977-4dd9-9e4d-abd37bf687a1",
+      "name": "Get One Day Stock"
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "漲幅",
+              "order": "descending"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        288,
+        0
+      ],
+      "id": "9aebb6ad-d45a-4257-b785-b9fa17320960",
+      "name": "Sort"
+    },
+    {
+      "parameters": {
+        "maxItems": 10
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        496,
+        0
+      ],
+      "id": "3fbc2d37-4dba-4ada-b939-74ea49465563",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "18yhtBkFLt-212n371AIZ6fTPvQRw4Y18iTPhISd2_T8",
+          "mode": "list",
+          "cachedResultName": "單日漲幅最多股票",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18yhtBkFLt-212n371AIZ6fTPvQRw4Y18iTPhISd2_T8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "工作表1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18yhtBkFLt-212n371AIZ6fTPvQRw4Y18iTPhISd2_T8/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "代號"
+          ],
+          "schema": [
+            {
+              "id": "代號",
+              "displayName": "代號",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "名稱",
+              "displayName": "名稱",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "交易量",
+              "displayName": "交易量",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "收盤價",
+              "displayName": "收盤價",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "漲幅",
+              "displayName": "漲幅",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        704,
+        0
+      ],
+      "id": "5ba5858b-b6b3-4f02-ad8b-755d432b09b5",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Zw7FjHfjGe1b7PRh",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get One Day Stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get One Day Stock": {
+      "main": [
+        [
+          {
+            "node": "Data Transform",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Transform": {
+      "main": [
+        [
+          {
+            "node": "Sort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sort": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "dc97d82f-dd23-49dd-b100-2e5b86967219",
+  "triggerCount": 0,
+  "tags": []
+}

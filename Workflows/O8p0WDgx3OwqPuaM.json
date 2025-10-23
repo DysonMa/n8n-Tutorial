@@ -1,0 +1,162 @@
+{
+  "createdAt": "2025-09-21T07:26:29.750Z",
+  "updatedAt": "2025-09-22T15:34:56.000Z",
+  "id": "O8p0WDgx3OwqPuaM",
+  "name": "2-4. 電腦維修 Google Forms",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1d-djTqjz1HW2--AsFwA6Yxsuo3AtgGid3qe08hcdvJ8",
+          "mode": "list",
+          "cachedResultName": "電腦送修申請表單 (回覆)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1d-djTqjz1HW2--AsFwA6Yxsuo3AtgGid3qe08hcdvJ8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1710695889,
+          "mode": "list",
+          "cachedResultName": "表單回應 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1d-djTqjz1HW2--AsFwA6Yxsuo3AtgGid3qe08hcdvJ8/edit#gid=1710695889"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -432,
+        -16
+      ],
+      "id": "ff74c85c-bb1c-429d-8509-1272e86cba00",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "dq0Q3gbsMRx5Ag9O",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d6f78183-f3da-4a3a-802c-e39ea41e6b0d",
+              "leftValue": "={{ $json['問題嚴重程度'] }}",
+              "rightValue": "嚴重",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -208,
+        -16
+      ],
+      "id": "7d607f55-7a11-4fc1-ac3a-71a65666221f",
+      "name": "If"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        16,
+        80
+      ],
+      "id": "08d65207-6ea9-4de9-b418-6b4fd7af4ec7",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "sendTo": "test@example.com",
+        "subject": "=Hello  {{ $json['申請人姓名'] }}",
+        "message": "=Hello  {{ $json['申請人姓名'] }}!",
+        "options": {
+          "replyToSenderOnly": true
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        16,
+        -112
+      ],
+      "id": "46267f00-10f3-4600-a9ff-2f8c6464f0c4",
+      "name": "Send a message",
+      "webhookId": "0b1044dc-9808-406c-b005-be3863a53684",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "IgaoC4HTonaZaGHM",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "89c1a5ff-aa07-4842-bd9e-77d1103da84b",
+  "triggerCount": 0,
+  "tags": []
+}

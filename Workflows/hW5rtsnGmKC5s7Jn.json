@@ -1,0 +1,73 @@
+{
+  "createdAt": "2025-09-23T16:15:10.066Z",
+  "updatedAt": "2025-09-23T16:21:32.000Z",
+  "id": "hW5rtsnGmKC5s7Jn",
+  "name": "Edit Field介紹",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9a5f88b9-3e3d-481e-b88e-24b059a930c4",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"username\": \"{{ $json.username }}\",\n  \"user_id\": \"{{ $json.user_id }}\",\n  \"money_in_twd\": {{ $json.cash }}\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "3c584261-1d56-4527-89ef-cd8d7d21bd2a",
+      "name": "Edit Fields"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "When clicking ‘Execute workflow’": [
+      {
+        "json": {
+          "id": 1,
+          "username": "Eric",
+          "user_id": "@eric_777",
+          "cash": 50000,
+          "cash_type": "TWD",
+          "avatar_url": "https://example.com/v/1234",
+          "created_at": "2025/09/01 11:00:12",
+          "updated_at": "2025/09/01 22:12:32"
+        }
+      }
+    ]
+  },
+  "versionId": "2c836b29-4f8a-4d79-9d22-7e2105c571c2",
+  "triggerCount": 0,
+  "tags": []
+}

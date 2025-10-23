@@ -1,0 +1,112 @@
+{
+  "createdAt": "2025-09-21T07:18:14.633Z",
+  "updatedAt": "2025-09-21T07:27:55.000Z",
+  "id": "l753I0uUdDXCmB3X",
+  "name": "2-1. 本地檔案讀寫",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "/your/path/to/students.csv",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        288,
+        48
+      ],
+      "id": "357223b2-953d-4533-a1b0-e02e312dd3a5",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "options": {
+          "delimiter": ",",
+          "fileName": "students",
+          "headerRow": true
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        64,
+        48
+      ],
+      "id": "9b983333-fdd2-4cfd-86ae-a2eb59036ad8",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        48
+      ],
+      "id": "ccb6b375-e7f2-4a89-927c-42a6018f7bef",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "connections": {
+    "Read/Write Files from Disk": {
+      "main": [
+        []
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "When clicking ‘Execute workflow’": [
+      {
+        "json": {
+          "id": 1,
+          "name": "John",
+          "age": 15,
+          "class": "A"
+        }
+      },
+      {
+        "json": {
+          "id": 2,
+          "name": "Merry",
+          "age": 14,
+          "class": "B"
+        }
+      }
+    ]
+  },
+  "versionId": "eb11aee5-af84-4500-9489-eda73d3b1e9b",
+  "triggerCount": 0,
+  "tags": []
+}

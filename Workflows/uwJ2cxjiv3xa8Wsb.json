@@ -1,0 +1,569 @@
+{
+  "createdAt": "2025-09-22T15:39:13.480Z",
+  "updatedAt": "2025-09-30T12:57:09.000Z",
+  "id": "uwJ2cxjiv3xa8Wsb",
+  "name": "2-5. Google Sheets 操作",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        -32
+      ],
+      "id": "7d99ce20-bcf2-4381-9776-5ad6603aae4c",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "spreadsheet",
+        "title": "記帳隨手記",
+        "sheetsUi": {
+          "sheetValues": [
+            {
+              "title": "資訊總覽"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        -32
+      ],
+      "id": "e1c48479-ba3c-4aaf-a2e9-ef3d2c0cb834",
+      "name": "Create spreadsheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Zw7FjHfjGe1b7PRh",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $json.spreadsheetId }}",
+          "mode": "id"
+        },
+        "title": "9月",
+        "options": {
+          "tabColor": "#00FFF7"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        672,
+        -32
+      ],
+      "id": "6ffb54a2-5bf0-4c9e-bf9d-523c105c8b2c",
+      "name": "Create sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Zw7FjHfjGe1b7PRh",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Create Spread Sheet ",
+        "height": 256,
+        "width": 896
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -64,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "06795411-3de5-4d0a-8a36-2640a553f69f",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"日期\": \"2025/09/01\",\n  \"類別\": \"晚餐\",\n  \"名稱\": \"牛肉麵\",\n  \"價格\": 200\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        224
+      ],
+      "id": "1dac6301-9998-4085-b0a7-d044b62fc47e",
+      "name": "Mock Data"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1EpTgKyza0lHxpYOtCcyQm0-6cfNTy6a8c8WXlxNpNE0",
+          "mode": "list",
+          "cachedResultName": "記帳隨手記",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EpTgKyza0lHxpYOtCcyQm0-6cfNTy6a8c8WXlxNpNE0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "9月",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "日期"
+          ],
+          "schema": [
+            {
+              "id": "日期",
+              "displayName": "日期",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "類別",
+              "displayName": "類別",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "名稱",
+              "displayName": "名稱",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "價格",
+              "displayName": "價格",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "cellFormat": "RAW"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        416
+      ],
+      "id": "6850e6cb-515a-4df5-96d9-0af11cb70214",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Zw7FjHfjGe1b7PRh",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1EpTgKyza0lHxpYOtCcyQm0-6cfNTy6a8c8WXlxNpNE0",
+          "mode": "list",
+          "cachedResultName": "記帳隨手記",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EpTgKyza0lHxpYOtCcyQm0-6cfNTy6a8c8WXlxNpNE0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "9月",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": 2,
+            "日期": "111",
+            "類別": "111",
+            "名稱": "111",
+            "價格": "100"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "日期",
+              "displayName": "日期",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "類別",
+              "displayName": "類別",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "名稱",
+              "displayName": "名稱",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "價格",
+              "displayName": "價格",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        464,
+        208
+      ],
+      "id": "1096fc9a-d1d8-43b3-8455-b357cc7441ee",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Zw7FjHfjGe1b7PRh",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "1EpTgKyza0lHxpYOtCcyQm0-6cfNTy6a8c8WXlxNpNE0",
+          "mode": "list",
+          "cachedResultName": "記帳隨手記",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EpTgKyza0lHxpYOtCcyQm0-6cfNTy6a8c8WXlxNpNE0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "9月",
+          "mode": "name"
+        },
+        "startIndex": 3,
+        "numberToDelete": 2
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        464,
+        432
+      ],
+      "id": "a2e9b561-a34e-4125-9fe2-bf3a5ee2480a",
+      "name": "Delete rows or columns from sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Zw7FjHfjGe1b7PRh",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"日期\": \"2025/09/02\",\n  \"類別\": \"早餐\",\n  \"名稱\": \"蛋餅\",\n  \"價格\": 50\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        416
+      ],
+      "id": "d3a7ccb2-b276-40f6-822c-105e6e507cd3",
+      "name": "Mock Data1"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"日期\": \"2025/09/03\",\n  \"類別\": \"午餐\",\n  \"名稱\": \"便當\",\n  \"價格\": 100\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        608
+      ],
+      "id": "4e401920-b640-4032-b6fe-2aab0b235601",
+      "name": "Mock Data2"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1EpTgKyza0lHxpYOtCcyQm0-6cfNTy6a8c8WXlxNpNE0",
+          "mode": "list",
+          "cachedResultName": "記帳隨手記",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EpTgKyza0lHxpYOtCcyQm0-6cfNTy6a8c8WXlxNpNE0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "9月",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        464,
+        880
+      ],
+      "id": "bffcfe12-47e4-4828-a51d-13316d0d0822",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Zw7FjHfjGe1b7PRh",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "value": "1EpTgKyza0lHxpYOtCcyQm0-6cfNTy6a8c8WXlxNpNE0",
+          "mode": "list",
+          "cachedResultName": "記帳隨手記",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EpTgKyza0lHxpYOtCcyQm0-6cfNTy6a8c8WXlxNpNE0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "9月",
+          "mode": "name"
+        },
+        "keepFirstRow": true
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        464,
+        656
+      ],
+      "id": "2f3ba8f9-cb9e-409c-bb4e-6e4f934fd3a5",
+      "name": "Clear sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Zw7FjHfjGe1b7PRh",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "remove",
+        "documentId": {
+          "__rl": true,
+          "value": "1EpTgKyza0lHxpYOtCcyQm0-6cfNTy6a8c8WXlxNpNE0",
+          "mode": "list",
+          "cachedResultName": "記帳隨手記",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EpTgKyza0lHxpYOtCcyQm0-6cfNTy6a8c8WXlxNpNE0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "9月",
+          "mode": "name"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        688,
+        656
+      ],
+      "id": "a526a011-d5b9-4344-8de0-1457d58c6c47",
+      "name": "Delete sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Zw7FjHfjGe1b7PRh",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Spread Sheet Operations",
+        "height": 864,
+        "width": 1008
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -64,
+        176
+      ],
+      "typeVersion": 1,
+      "id": "3d074b87-5a24-4a3a-8e85-f77100f936af",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"sheet_url\": \"https://docs.google.com/spreadsheets/d/{{ $json.spreadsheetId }}/edit?gid=0#gid=0\",\n  \"spreadsheetId\": \"{{ $json.spreadsheetId }}\"\n}\n ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        448,
+        -32
+      ],
+      "id": "9466bf98-d96e-4b0e-a4e5-7d8f53b06bbd",
+      "name": "Variables"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Create spreadsheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create spreadsheet": {
+      "main": [
+        [
+          {
+            "node": "Variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mock Data": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet": {
+      "main": [
+        []
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        []
+      ]
+    },
+    "Mock Data1": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mock Data2": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clear sheet": {
+      "main": [
+        []
+      ]
+    },
+    "Variables": {
+      "main": [
+        [
+          {
+            "node": "Create sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "3ee8b17b-2621-44b7-bf74-aaffa96fbe89",
+  "triggerCount": 0,
+  "tags": []
+}

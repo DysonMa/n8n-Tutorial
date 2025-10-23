@@ -1,0 +1,253 @@
+{
+  "createdAt": "2025-10-13T15:28:35.305Z",
+  "updatedAt": "2025-10-13T15:43:27.000Z",
+  "id": "McJfrYdTMISzsjCR",
+  "name": "4-2. Ollama總結Notion文章",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        0
+      ],
+      "id": "20f832b3-0eb6-46c6-85cc-92f031e54d18",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "28baf6f6-c5b8-80f5-8a71-c429aea3c1b5",
+          "mode": "list",
+          "cachedResultName": "商周最新文章",
+          "cachedResultUrl": "https://www.notion.so/28baf6f6c5b880f58a71c429aea3c1b5"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        -144,
+        0
+      ],
+      "id": "b6efdb0b-6c6f-4fd6-a355-69e390dfec1a",
+      "name": "Get many database pages",
+      "credentials": {
+        "notionApi": {
+          "id": "B18KOKd2FxCoKi1w",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "block",
+        "operation": "getAll",
+        "blockId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        64,
+        0
+      ],
+      "id": "77d9281d-e73e-41e5-976f-c32aebd9af54",
+      "name": "Get many child blocks",
+      "credentials": {
+        "notionApi": {
+          "id": "B18KOKd2FxCoKi1w",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f8abb8de-58b1-44f5-b1bd-b89bf479f5e3",
+              "name": "content",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        272,
+        0
+      ],
+      "id": "e534b3e1-541e-40ba-8f59-032111083ca6",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('When clicking ‘Execute workflow’').first().json.prompt }}\nContent:\n{{ $json.content }}",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        480,
+        0
+      ],
+      "id": "9e7c1a22-221c-4c7b-99ea-93ded7a62207",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:3b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        416,
+        208
+      ],
+      "id": "b0d79b9f-4d23-4086-9377-748d00e64e22",
+      "name": "Ollama Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "ygGWU12VQdbyIj6Q",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $('Get many database pages').item.json.id }}",
+          "mode": "id"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Summarize|rich_text",
+              "textContent": "={{ $json.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        832,
+        0
+      ],
+      "id": "d1982550-bdd7-4086-b0fe-4700c3ac9e52",
+      "name": "Update a database page",
+      "credentials": {
+        "notionApi": {
+          "id": "B18KOKd2FxCoKi1w",
+          "name": "Notion account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get many database pages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many database pages": {
+      "main": [
+        [
+          {
+            "node": "Get many child blocks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many child blocks": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Update a database page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "When clicking ‘Execute workflow’": [
+      {
+        "json": {
+          "prompt": "Please summarize the content below in Chinese!"
+        }
+      }
+    ]
+  },
+  "versionId": "27abf903-c924-4a21-969e-8ee3373735a1",
+  "triggerCount": 0,
+  "tags": []
+}

@@ -1,0 +1,344 @@
+{
+  "createdAt": "2025-10-18T08:49:42.031Z",
+  "updatedAt": "2025-10-19T07:00:52.000Z",
+  "id": "RoRcKHHXO4gqQJg8",
+  "name": "4-9. AI Agent x Gemini 代理人 x LINE 聊天機器人",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.event_msg }}",
+        "options": {
+          "systemMessage": "=<role>\n你是 n8n Demo AI Agent，一個友善且樂於助人的助理，旨在展\n示 n8n 自動化平台中 AI Agent 的強大能力。\n你的個性是積極鼓勵、略帶教育性，並且對自動化充滿熱情。\n你的主要職能是透過使用可用的工具，回答使用者的問題並滿足\n他們的需求，以展示你的能力。\n你具備對話式互動的特質。\n</role>\n<instructions>\n<goal>\n你的主要目標是作為以 n8n 建構的 AI Agent 的即時示範。\n你將與使用者互動，透過智慧地運用可用工具來回答他們的問題，並解釋 AI Agent 背後的概念，幫助他們了解其\n潛在應用。\n</goal>\n<context>\n### 我的運作方式\n我是一個運行於簡單 n8n 工作流程中的 AI 模型。\n這個流程提供我兩個關鍵能力：\n1. **一組工具（Tools）：** 這些是我可以呼叫來取得資訊或執行動作的功能。\n2. **簡單記憶功能（Simple Memory）：** 我能記住目前對話的上下文，以理解使用者意圖。\n### 我的目的\n我的主要目的是作為展示範例。\n我示範如何將聊天介面與各種功能（我的工具）結合，而不需要複雜的使用者介面。\n這是一種讓任何人都能透過簡單對話使用強大自動化的絕佳方式。\n### 我的工具使用說明\n當使用者的需求與工具能力相符時，你**必須選擇其中一個可用的工具**來執行。\n你**不能自己直接執行這些動作**，必須透過工具呼叫來完成。\n### 關於 n8n 中的 AI Agents\n- **可靠性（Reliability）：** 雖然我能有效地一次使用一個工具，但更進階的 Agent 能執行多步驟任務。\n然而，對於「複雜或關鍵的任務流程」，使用 n8n 的**結構化步驟式工作流程**通常更可靠，\n不應僅依賴 Agent 的推理能力。Agent 非常適合面向使用者的互動場景，但在後端可靠性方面，結構化流程仍然\n是王道。\n- **最佳實踐（Best Practices）：**\n良好的做法是保持 Agent 的工具組精簡，通常在 10～15 個工具以內，以確保穩定性並避免混亂。\n### 當前日期與時間\n{{ $now }}\n</context>\n<output_format>\n- 以友善、對話式且樂於助人的語氣回應。\n- 當使用者的請求需要使用工具時，先選擇合適的工具，然後清楚地將該工具執行的結果呈現給使用者。\n- 保持主動性。若使用者不確定該問什麼，可主動提供你能處理的範例問題（例如：介紹你的工具或你能執行的任\n務）。\n</output_format>\n</instructions>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        248,
+        -48
+      ],
+      "id": "ad9d343f-ad0b-4517-ae63-047d1c1612e8",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        16,
+        176
+      ],
+      "id": "95aa57a7-bee4-4444-b88b-0501a86cda34",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "kPDMV6nSIyiJrnGx",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        192,
+        176
+      ],
+      "id": "0b5f8756-28a7-4051-a72e-a73220c6018c",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "toolDescription": "從商業週刊取得 RSS 部落格文章",
+        "url": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('URL', `請使用以下其中之一的來源：\n- https://cmsapi.businessweekly.com.tw/?CategoryId=24612ec9-2ac5-4e1f-ab04-310879f89b33&TemplateId=8E19CF43-50E5-4093-B72D-70A912962D55 (商業週刊)`, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedReadTool",
+      "typeVersion": 1.2,
+      "position": [
+        320,
+        176
+      ],
+      "id": "fba841b3-f936-4511-833d-c13d12702c5f",
+      "name": "RSS Read"
+    },
+    {
+      "parameters": {
+        "toolDescription": "隨時隨地取得天氣預報\n你可以在假設多數資訊的情況下發出請求，唯一需要的資訊是地點（使用城市名稱即可自動推測緯度與經度）以及時間區間（若未指定，則預設為今天）",
+        "url": "https://api.open-meteo.com/v1/forecast",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "latitude",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', `地點的緯度，例如：台灣的緯度為 23.9\n不要詢問使用者，請自動推斷。`, 'string') }}"
+            },
+            {
+              "name": "longitude",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters1_Value', `地點的經度，例如：台灣的經度為 121\n不要詢問使用者，請自動推斷。`, 'string') }}"
+            },
+            {
+              "name": "current",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters2_Value', `以逗號分隔的「即時天氣變數」清單（不要有空白）\n\n範例：temperature_2m,windspeed_10m,rain。\n\n可選項目：\ntemperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,rain,showers,snowfall,weathercode,cloudcover_total,pressure_msl,surface_pressure,windspeed_10m,winddirection_10m,windgusts_10m。`, 'string') }}"
+            },
+            {
+              "name": "hourly",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters3_Value', `以逗號分隔的「每小時天氣變數」清單（不要有空白）。\n每小時資料僅適合取得單日資訊；若要查看每週概況，請使用每日（daily）模式。\n\n範例：temperature_2m,precipitation。\n\n可選項目：\ntemperature_2m,relative_humidity_2m,dewpoint_2m,apparent_temperature,precipitation,rain,showers,snowfall,snow_depth,pressure_msl,surface_pressure,cloudcover_total,cloudcover_low,cloudcover_mid,cloudcover_high,windspeed_10m,winddirection_10m,windgusts_10m,visibility,is_day,sunshine_duration,soil_temperature,soil_moisture,PM10,PM2_5,carbon_monoxide,ozone,us_aqi,UV_index。`, 'string') }}"
+            },
+            {
+              "name": "daily",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters4_Value', `以逗號分隔的「每日天氣變數」清單（不要有空白）。\n\n範例：temperature_2m_max,precipitation_sum。\n\n可選項目：\nweathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,precipitation_sum,rain_sum,showers_sum,snowfall_sum,precipitation_hours,sunrise,sunset,daylight_duration,sunshine_duration,pressure_msl_max,pressure_msl_min,surface_pressure_max,surface_pressure_min,windgusts_10m_max,windspeed_10m_max,winddirection_10m_dominant,shortwave_radiation_sum`, 'string') }}"
+            },
+            {
+              "name": "start_date",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters5_Value', `開始日期，格式為 YYYY-MM-DD。\n範例：2025-07-15`, 'string') }}"
+            },
+            {
+              "name": "end_date",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters6_Value', `結束日期，格式為 YYYY-MM-DD。\n必須在開始日期之後。\n範例：2025-07-18`, 'string') }}"
+            },
+            {
+              "name": "temperature_unit",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters7_Value', `溫度單位。\n可選項目：celsius（預設）、fahrenheit。`, 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        448,
+        176
+      ],
+      "id": "c104127c-6085-4dcc-90dd-56544211c4af",
+      "name": "Get Weather"
+    },
+    {
+      "parameters": {
+        "description": "呼叫此工具以取得指定年份、月份及幣別\n的匯率（現金匯率－本行買入）。\n若未指定日期，則預設為今天",
+        "workflowId": {
+          "__rl": true,
+          "value": "DA1RAWzvv8WCsoaR",
+          "mode": "list",
+          "cachedResultName": "4-8.當日匯率查詢"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "year": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('year', `輸入日期的年份，格式為 YYYY。\n範例：2025`, 'string') }}",
+            "month": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('month', `輸入日期的月份，格式為 MM。\n範例：10`, 'string') }}",
+            "currency": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('currency', `指定幣別。\n可選項目：JPY（預設）、USD。`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "year",
+              "displayName": "year",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "month",
+              "displayName": "month",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "currency",
+              "displayName": "currency",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        576,
+        176
+      ],
+      "id": "ce4c0fcc-3041-4243-a186-f5a3403e9d88",
+      "name": "Call n8n Workflow Tool"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "3236ea15-1f78-4536-821c-0c14067c4841",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -224,
+        -48
+      ],
+      "id": "7f900acd-9eaf-4c5d-b6b0-d510d8a6959f",
+      "name": "Webhook",
+      "webhookId": "3236ea15-1f78-4536-821c-0c14067c4841"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n\"event_msg\": \"{{ $json.body.events[0].message.text }}\",\n\"event_type\": \"{{ $json.body.events[0].message.type }}\",\n\"user_id\": \"{{ $json.body.events[0].source.userId }}\",\n\"reply_token\": \"{{ $json.body.events[0].replyToken }}\",\n\"sessionId\": \"{{ $json.body.events[0].source.userId }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        16,
+        -48
+      ],
+      "id": "43eae4f2-0854-4e85-91a7-c3ff3d325567",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.line.me/v2/bot/message/reply",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpBearerAuth",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n  \"Content-Type\": \"application/json\"\n}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"replyToken\":\"{{ $('Edit Fields').item.json.reply_token }}\",\n  \"messages\":[\n    {\n      \"type\":\"text\",\n      \"text\": {{ $json.output.toJsonString() }}\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        592,
+        -48
+      ],
+      "id": "5d6e04c4-2e89-46c8-9c70-1569d054e73a",
+      "name": "Reply",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "kOd0Rsiq9Mtb81bq",
+          "name": "LINE Auth Token"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Read": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Weather": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call n8n Workflow Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "fe17e81f-6262-403b-9291-ff58d0e6b4d5",
+  "triggerCount": 1,
+  "tags": []
+}

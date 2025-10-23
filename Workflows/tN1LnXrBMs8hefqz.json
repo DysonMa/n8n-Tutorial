@@ -1,0 +1,223 @@
+{
+  "createdAt": "2025-10-04T07:57:59.981Z",
+  "updatedAt": "2025-10-22T15:33:15.000Z",
+  "id": "tN1LnXrBMs8hefqz",
+  "name": "2-12.台灣銀行匯率爬蟲",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "url": "=https://rate.bot.com.tw/xrt/quote/2024-12/USD?Lang=zh-TW",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -128,
+        16
+      ],
+      "id": "5bb19440-63fa-4c0d-a669-21f5c7a01b56",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "掛牌日期",
+              "cssSelector": "tr > td:nth-child(1) a",
+              "returnArray": true
+            },
+            {
+              "key": "幣別",
+              "cssSelector": "tr > td:nth-child(2)",
+              "returnArray": true
+            },
+            {
+              "key": "本行買入現金匯率",
+              "cssSelector": "tr > td:nth-child(3)",
+              "returnArray": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        96,
+        16
+      ],
+      "id": "b4b8567c-63ae-4738-b341-1f20e4afa9aa",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "83414f28-1e67-442b-a7ca-c97461f15590",
+              "leftValue": "={{ $json[\"掛牌日期\"] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "empty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "ef04e8e0-ec49-4762-9882-e239d4976198",
+              "leftValue": "={{ $json[\"幣別\"] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "empty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "833816f0-bdc6-4765-b180-06b5a2c2ad08",
+              "leftValue": "={{ $json[\"本行買入現金匯率\"] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        320,
+        16
+      ],
+      "id": "5d030d04-6745-4d68-aa91-086b3f7c514f",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "errorMessage": "Empty Data!"
+      },
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        544,
+        -80
+      ],
+      "id": "20dc9a29-2e7f-4675-aa59-42de369d7aeb",
+      "name": "Stop and Error"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        544,
+        112
+      ],
+      "id": "bdc86940-8d4a-4fad-ad65-35ccfceaeb2b",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -352,
+        16
+      ],
+      "id": "5c1c8046-1d0d-485f-8186-6361303ab0fe",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Stop and Error",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "2fsP25FHVR9CpLZz"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": null,
+  "pinData": {},
+  "versionId": "a2e4c9f7-06f6-4c0f-a3be-13ce8037febd",
+  "triggerCount": 1,
+  "tags": []
+}
